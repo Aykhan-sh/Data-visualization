@@ -1,6 +1,6 @@
 async function drawBar(mode) {
     const dataset = await d3.json("../data/my_weather_data.json")
-    d3.select("#wrapper").html("");
+    // d3.select("#wrapper").html("");
     //Accessor
     if (mode == "low") {
         var accessor = d => d.temperatureLow;
