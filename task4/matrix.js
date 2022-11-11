@@ -1,17 +1,18 @@
 async function build() {
-    const nodes = await d3.csv("nodes.csv");
-    const edges = await d3.csv("edges.csv");
-    function adjacencyMatrix(nodes, edges) {
+    const row_nodes = await d3.csv("data/row_nodes.csv");
+    const col_nodes = await d3.csv("data/col_nodes.csv");
+    const edges = await d3.csv("data/edges.csv");
+    function adjacencyMatrix(row_nodes, col_nodes, edges) {
         var matrix = [];
         var edgeHash = {};
         edges.forEach(edge => {
             var id = edge.source + "-" + edge.target;
             edgeHash[id] = edge;
         })
-        for (let i = 0; i < nodes.length; i++) {
-            for (let j = 0; j < nodes.length; j++) {
-                var uel = nodes[i];
-                var bel = nodes[j];
+        for (let i = 0; i < row_nodes.length; i++) {
+            for (let j = 0; j < col_nodes.length; j++) {
+                var uel = row_nodes[i];
+                var bel = col_nodes[j];
                 var grid = {
                     id: uel.id + "-" + bel.id,
                     x: j,
@@ -32,10 +33,10 @@ async function build() {
         width: window.innerWidth * 0.8,
         height: window.innerWidth * 0.8,
         margin: {
-            top: 50,
+            top: 250,
             right: 10,
             bottom: 10,
-            left: 55
+            left: 255
         }
     }
 
@@ -54,7 +55,7 @@ async function build() {
 
     const bounds = wrapper.append("g")
         .style("transform", `translate(${dimension.margin.left}px,${dimension.margin.top}px)`);
-    var data = adjacencyMatrix(nodes, edges);
+    var data = adjacencyMatrix(row_nodes, col_nodes, edges);
     // console.log(adjacencyMatrix(nodes,edges));
     const pole = bounds
         .selectAll("rect")
@@ -70,21 +71,21 @@ async function build() {
 
     const namesX = wrapper
         .append("g")
-        .attr("transform", "translate(55,25)")
+        .attr("transform", "translate(255,225)")
         .selectAll("text")
-        .data(nodes)
+        .data(col_nodes)
         .enter()
         .append("text")
         .attr("y", (d, i) => i * 25 + 12.5)
         .text(d => d.id)
-        .style("text-anchor", "middle")
+        .style("text-anchor", "start")
         .attr("transform", "rotate(270)");
 
     const namesY = wrapper
         .append("g")
-        .attr("transform", "translate(45,50)")
+        .attr("transform", "translate(245,250)")
         .selectAll("text")
-        .data(nodes)
+        .data(row_nodes)
         .enter()
         .append("text")
         .attr("y", (d, i) => i * 25 + 12.5)
